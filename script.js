@@ -146,19 +146,19 @@ function createCheckboxTree(parentElement, netflixData){
     titles = Object.keys(netflixData);
     console.log(titles);
     for(var i = 0; i < titles.length; i++){
-        title = titles[i]
+        var title = titles[i]
         if(title == "_leaf_") continue;
         console.log(title);
 
-        var line = $(`<li><span class="caret">
+        var line = $(`<li><span class="caret"></span>
         <input type="checkbox" id="${title}" value="${title}">
         <label for="${title}"> ${title}</label><br>
-        </span></li>`);
+        </li>`);
         var ul = $(`<ul class="nested"></ul>`);
         line.append(ul);
         parentElement.append(line);
 
-        //createCheckboxTree(ul, netflixData[title])
+        createCheckboxTree(ul, netflixData[title])
     }
 }
 /*
