@@ -1,1 +1,34 @@
-<h1>Hello!</h1>
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="script.js"></script>
+  <link rel = "stylesheet" href = "style.css">
+  <title> Home Page </title>
+</head>
+
+<body>
+
+    <header>
+        <h1> Netflix History Grapher </h1>
+    </header>
+
+    <input id="fileSelect" type="file" accept=".csv"/>
+    <button id="fileSubmitBtn" type="button">Submit</button>
+
+    <form id="checkboxList">
+
+    </form>
+
+    <!-- Identify where the chart should be drawn. -->
+    <div id="lineGraph"/>
+
+    <footer>
+        <p> Footer </p>
+    </footer>
+
+</body>
+</html>
