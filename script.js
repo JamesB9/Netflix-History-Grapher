@@ -49,6 +49,13 @@ $(document).ready(() => {
     console.log("Document Ready");
 });
 
+$(document).on("click", ".caret", (event) => {
+    console.log("Clicked")
+    console.log(event.target);
+    event.target.parentElement.querySelector(".nested").classList.toggle("active");
+    event.target.classList.toggle("caret-down");
+});
+
 /**
 Reads and returns contents of a file object
 **/
@@ -93,6 +100,7 @@ function extractNetflixData(csvString, delimeter=','){
             if(!depth[title]){
                 if(j == titles.length - 1){ // If final depth
                     depth[title] = []; // Create list for dates
+
                 }else{
                     depth[title] = {}; // Create JSON to store next title
                 }
@@ -102,23 +110,61 @@ function extractNetflixData(csvString, delimeter=','){
             if(j == titles.length - 1){ // If final depth
                 depth.push(date);
             }
+            if(j < titles.length -2){
+                depth["_leaf_"] = false;
+            }else{
+                depth["_leaf_"] = true;
+            }
         }
     }
     return netflixData;
 }
 
-function createCheckboxes(netflixData){
-    $("#checkboxList").empty()
-    keys = Object.keys(netflixData);
-    console.log(keys[0])
-    depth = 0;
-    for(var i = 0; i< keys.length; i++){ // For each top level key
-        $("#checkboxList").append(
-            `<input type="checkbox" id="${keys[i]}" value="${keys[i]}">
-            <label for="${keys[i]}"> ${keys[i]}</label><br>`);
+function createCheckbox(parentElement, json){
+    keys = Object.keys(json);
+    if(keys[0] == "0") {return;}
+    console.log("Checkbox created for: " + keys[0]);
+    const line = $(`<li><span class="caret"></span>
+    <input type="checkbox" id="${keys[0]}" value="${keys[0]}">
+    <label for="${keys[0]}"> ${keys[0]}</label><br>
+    </li>`);
+    const ul = $(`<ul class="nested"></ul>`);
+    line.append(ul);
+    parentElement.append(line);
+
+    childKeys = Object.keys(json[keys[0]]);
+    if(childKeys != undefined){
+        for(var i = 0; i < childKeys.length; i++){
+            createCheckbox(ul, json[keys[i]]);
+        }
     }
 }
 
+function createCheckboxTree(parentElement, netflixData){
+    if(netflixData["_leaf_"] == true) return;
+
+    titles = Object.keys(netflixData);
+    console.log(titles);
+    for(var i = 0; i < titles.length; i++){
+        title = titles[i]
+        if(title == "_leaf_") continue;
+        console.log(title);
+
+        var line = $(`<li><span class="caret">
+        <input type="checkbox" id="${title}" value="${title}">
+        <label for="${title}"> ${title}</label><br>
+        </span></li>`);
+        var ul = $(`<ul class="nested"></ul>`);
+        line.append(ul);
+        parentElement.append(line);
+
+        //createCheckboxTree(ul, netflixData[title])
+    }
+}
+/*
+<input type="checkbox" id="${keys[0]}" value="${keys[0]}">
+<label for="${keys[0]}"> ${keys[0]}</label><br>
+*/
 
 /**
 ON FILE SUBMIT BUTTON CLICKED
@@ -127,7 +173,8 @@ $(document).on("click", '#fileSubmitBtn', async () => {
     var file = $('#fileSelect').prop('files')[0];
     const contents = await readFile(file);
     const netflixData = extractNetflixData(contents);
-    createCheckboxes(netflixData);
     console.log(netflixData);
+    $("#myUL").empty()
+    createCheckboxTree($("#myUL"), netflixData);
     drawChart();
 });
