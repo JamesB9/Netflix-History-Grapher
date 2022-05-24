@@ -5,27 +5,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 
-const data = {
-    id: 'root',
-    name: 'Parent',
-    children: [
-      {
-        id: '1',
-        name: 'Movie 1',
-      },
-      {
-        id: '3',
-        name: 'Star Trek',
-        children: [
-          {
-            id: '4',
-            name: 'The Next Generation',
-          },
-        ],
-      },
-    ],
-  };
-
 export default class DropdownSelector extends Component {
     constructor(props) {
       super(props);
@@ -37,8 +16,18 @@ export default class DropdownSelector extends Component {
     isParent(){
         return this.children.length > 0;
     }
-
+    
     render() {
+      let childlist = []
+      let i = 0;
+      for(var child in this.data.children){
+        childlist.push(<DropdownSelector key={i++} data={child} title="Test" children={[{title:"Test2", children:[]}]} />)
+      }
+      return (<div>
+        <h3>{this.data.name}</h3>
+        {childlist}
+      </div>)
+      /*
         const renderTree = (nodes) => (
             <TreeItem key={nodes.id} nodeId={nodes.id} label={<Checkbox label={nodes.name} />}>
               {Array.isArray(nodes.children)
@@ -57,7 +46,7 @@ export default class DropdownSelector extends Component {
         >
             {renderTree(data)}
         </TreeView>
-        );
+        );*/
     }
 }
   
