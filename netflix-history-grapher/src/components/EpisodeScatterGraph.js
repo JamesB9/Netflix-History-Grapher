@@ -91,7 +91,7 @@ const options = {
     }
 }
 
-const graphData = {
+const data = {
     datasets: [{
         data: [{
             x: '2020-11-06',
@@ -117,69 +117,54 @@ const graphData = {
 }
 
 export default function EpisodeScatterGraph(props) {
-    const [data, setData] = useState();
-    const [graph, setGraph] = useState(graphData);
+    const historyData = props.historyData;
 
-
-
-
-            // SERIES STUFF
-            //["Star Trek", "Star Trek: The Next Generation", "Star Trek: Deep Space Nine", "Star Trek: Voyager", "Star Trek: Enterprise", "Star Trek: Discovery"]
-            var plots = ["Star Trek", "Star Trek: The Next Generation", "Star Trek: Deep Space Nine", "Star Trek: Voyager", "Star Trek: Enterprise", "Star Trek: Discovery"]
-            //var plots = ["Doctor Who", "Peep Show"]
-            var datasets = [];
-            for (var key in historyData.series) {
-                var i = plots.indexOf(key)
-                console.log(i)
-                if (i != -1) { // If to plot
-                    var datapoints = []
-                    for (var series in historyData.series[key]) {
-                        for (var ep in historyData.series[key][series]) {
-                            var time = historyData.series[key][series][ep]
-                            datapoints.push({ x: time, name: ep })
-                        }
-                    }
-                    
-                    datapoints.sort((a, b) => {
-                        var datea = a.x.split('-').join('');
-                        var dateb = b.x.split('-').join(''); 
-                        return (datea).localeCompare(dateb); 
-                    });
-
-                    for (var index = 0; index < datapoints.length; index++) {
-                        datapoints[index].y = index + 1;
-                        
-                    }
-                    var o = Math.round, r = Math.random, s = 255;
-                    var col = 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ', 1.0)';
-                    datasets.push({
-                        label: key,
-                        data: datapoints,
-                        borderColor: col,
-                        backgroundColor: col,
-                        borderWidth: 3,
-                        //pointBackgroundColor: ['#000', '#00bcd6', '#d300d6'],
-                        //pointBorderColor: ['#000', '#00bcd6', '#d300d6'],
-                        pointRadius: 1,
-                        pointHoverRadius: 5,
-                        fill: false,
-                        tension: 0,
-                        showLine: false
-                    });
+    // SERIES STUFF
+    //["Star Trek", "Star Trek: The Next Generation", "Star Trek: Deep Space Nine", "Star Trek: Voyager", "Star Trek: Enterprise", "Star Trek: Discovery"]
+    var plots = ["Star Trek", "Star Trek: The Next Generation", "Star Trek: Deep Space Nine", "Star Trek: Voyager", "Star Trek: Enterprise", "Star Trek: Discovery"]
+    //var plots = ["Doctor Who", "Peep Show"]
+    var datasets = [];
+    for (var key in historyData.series) {
+        var i = plots.indexOf(key)
+        if (i != -1) { // If to plot
+            var datapoints = []
+            for (var series in historyData.series[key]) {
+                for (var ep in historyData.series[key][series]) {
+                    var time = historyData.series[key][series][ep]
+                    datapoints.push({ x: time, name: ep })
                 }
             }
-            console.log("label", plots[0])
-
-            console.log("data", datapoints[0])
-            setGraph({
-                datasets: datasets
+            
+            datapoints.sort((a, b) => {
+                var datea = a.x.split('-').join('');
+                var dateb = b.x.split('-').join(''); 
+                return (datea).localeCompare(dateb); 
             });
-        });
-        reader.readAsText(file);
 
-    };
-
+            for (var index = 0; index < datapoints.length; index++) {
+                datapoints[index].y = index + 1;
+                
+            }
+            var o = Math.round, r = Math.random, s = 255;
+            var col = 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ', 1.0)';
+            datasets.push({
+                label: key,
+                data: datapoints,
+                borderColor: col,
+                backgroundColor: col,
+                borderWidth: 3,
+                //pointBackgroundColor: ['#000', '#00bcd6', '#d300d6'],
+                //pointBorderColor: ['#000', '#00bcd6', '#d300d6'],
+                pointRadius: 1,
+                pointHoverRadius: 5,
+                fill: false,
+                tension: 0,
+                showLine: false
+            });
+        }
+    }
+    data.datasets = datasets
     return (
-        <Scatter options={options} data={graph} test={"hi"}/>
+        <Scatter options={options} data={data}/>
     );
-}
+};
