@@ -1,6 +1,15 @@
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
 
+function change(event, selectedWatches, setSelectedWatches){
+    if(event.target.checked){
+        selectedWatches.push(event.target.id)
+    }else{
+        selectedWatches.splice(selectedWatches.indexOf(event.target.id), 1)
+    }
+    setSelectedWatches(selectedWatches)
+}
+
 function getEpisodesList(season) {
     return (
         <ul>
@@ -42,7 +51,7 @@ function getSeasonsAccordian(series) {
     )
 }
 
-function getSeriesAccordian(series) {
+function getSeriesAccordian(series, one, two) {
 
     return (
         <Accordion>
@@ -54,6 +63,7 @@ function getSeriesAccordian(series) {
                                 type="switch"
                                 id={seriesName}
                                 label={seriesName}
+                                onChange={(e) => change(e, one, two)}
                             />
                         </Accordion.Header>
                         <Accordion.Body>
@@ -69,6 +79,7 @@ function getSeriesAccordian(series) {
 
 export default function DataMenu(props) {
     const historyData = props.historyData
+    var selectedWatches = [...props.selectedWatches]
 
     return (
         <Accordion>
@@ -78,6 +89,7 @@ export default function DataMenu(props) {
                         type="switch"
                         id="film"
                         label="Films"
+                        onChange={(e) => props.setSelectedWatches("ag")}
                     />
                 </Accordion.Header>
                 <Accordion.Body>
@@ -93,7 +105,7 @@ export default function DataMenu(props) {
                     />
                 </Accordion.Header>
                 <Accordion.Body>
-                    {getSeriesAccordian(historyData.series)}
+                    {getSeriesAccordian(historyData.series, selectedWatches, props.setSelectedWatches)}
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>

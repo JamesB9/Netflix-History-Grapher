@@ -58,8 +58,9 @@ const options = {
                 enabled: true
             },
             limits: {
-                x: {min: 'original', max: 'original'},
-                y: {min: 0, max: 'original'}
+                //x: {min: 'original', max: 'original'},
+                //y: {min: 0, max: 'original'}
+                y: {min: 0}
             },
             zoom: {
               wheel: {
@@ -121,8 +122,8 @@ export default function EpisodeScatterGraph(props) {
 
     // SERIES STUFF
     //["Star Trek", "Star Trek: The Next Generation", "Star Trek: Deep Space Nine", "Star Trek: Voyager", "Star Trek: Enterprise", "Star Trek: Discovery"]
-    var plots = ["Star Trek", "Star Trek: The Next Generation", "Star Trek: Deep Space Nine", "Star Trek: Voyager", "Star Trek: Enterprise", "Star Trek: Discovery"]
-    //var plots = ["Doctor Who", "Peep Show"]
+    //var plots = ["Star Trek", "Star Trek: The Next Generation", "Star Trek: Deep Space Nine", "Star Trek: Voyager", "Star Trek: Enterprise", "Star Trek: Discovery"]
+    var plots = props.selectedWatches
     var datasets = [];
     for (var key in historyData.series) {
         var i = plots.indexOf(key)

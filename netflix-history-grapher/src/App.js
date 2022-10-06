@@ -8,12 +8,16 @@ import DataMenu from './components/DataMenu';
 
 function App() {
     const [historyData, setHistoryData] = useState();
-    console.log(historyData)
+    const [selectedWatches, setSelectedWatches] = useState([]);
+
+    console.log("History Data = ", historyData)
+    console.log("Selected Watches = ", selectedWatches)
+
     return (
         <Container style={{ minHeight: "100vh" }}>
             <FileUpload setHistoryData={setHistoryData}/>
-            {historyData !== undefined ? <EpisodeScatterGraph historyData={historyData}/> : null}
-            {historyData !== undefined ? <DataMenu historyData={historyData}/> : null}
+            {historyData !== undefined ? <EpisodeScatterGraph selectedWatches={selectedWatches} historyData={historyData}/> : null}
+            {historyData !== undefined ? <DataMenu setSelectedWatches={setSelectedWatches} selectedWatches={selectedWatches} historyData={historyData}/> : null}
             
         </Container>
     );
