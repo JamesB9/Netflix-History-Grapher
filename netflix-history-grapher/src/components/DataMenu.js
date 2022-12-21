@@ -10,7 +10,7 @@ function change(event, selectedWatches, setSelectedWatches){
     setSelectedWatches(selectedWatches)
 }
 
-function getEpisodesList(season) {
+function getEpisodesList(season, onChange) {
     return (
         <ul>
             {
@@ -20,6 +20,7 @@ function getEpisodesList(season) {
                             type="switch"
                             id={episode}
                             label={episode + " - " + season[episode]}
+                            onChange={onChange}
                         />
                     </li>
                 )
@@ -28,7 +29,8 @@ function getEpisodesList(season) {
     )
 }
 
-function getSeasonsAccordian(series) {
+
+function getSeasonsAccordian(series, onChange) {
     return (
         <Accordion>
             {
@@ -39,10 +41,11 @@ function getSeasonsAccordian(series) {
                                 type="switch"
                                 id={seasonName}
                                 label={seasonName}
+                                onChange={onChange}
                             />
                         </Accordion.Header>
                         <Accordion.Body>
-                            {getEpisodesList(series[seasonName])}
+                            {getEpisodesList(series[seasonName], onChange)}
                         </Accordion.Body>
                     </Accordion.Item>
                 )
@@ -51,7 +54,7 @@ function getSeasonsAccordian(series) {
     )
 }
 
-function getSeriesAccordian(series, one, two) {
+function getSeriesAccordian(series, onChange) {
 
     return (
         <Accordion>
@@ -63,11 +66,11 @@ function getSeriesAccordian(series, one, two) {
                                 type="switch"
                                 id={seriesName}
                                 label={seriesName}
-                                onChange={(e) => change(e, one, two)}
+                                onChange={onChange}
                             />
                         </Accordion.Header>
                         <Accordion.Body>
-                            {getSeasonsAccordian(series[seriesName])}
+                            {getSeasonsAccordian(series[seriesName], onChange)}
                         </Accordion.Body>
                     </Accordion.Item>
                 )
@@ -76,6 +79,7 @@ function getSeriesAccordian(series, one, two) {
     )
 
 }
+
 
 export default function DataMenu(props) {
     const historyData = props.historyData
@@ -96,6 +100,7 @@ export default function DataMenu(props) {
                     {getEpisodesList(historyData.film)}
                 </Accordion.Body>
             </Accordion.Item>
+
             <Accordion.Item eventKey="1">
                 <Accordion.Header>
                     <Form.Check
@@ -105,7 +110,7 @@ export default function DataMenu(props) {
                     />
                 </Accordion.Header>
                 <Accordion.Body>
-                    {getSeriesAccordian(historyData.series, selectedWatches, props.setSelectedWatches)}
+                    {getSeriesAccordian(historyData.series, (e) => change(e, selectedWatches, props.setSelectedWatches))}
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>

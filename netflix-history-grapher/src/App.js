@@ -8,7 +8,7 @@ import DataMenu from './components/DataMenu';
 
 function App() {
     const [historyData, setHistoryData] = useState();
-    const [selectedWatches, setSelectedWatches] = useState([]);
+    const [selectedWatches, setSelectedWatches] = useState(["The Big Bang Theory: Season 6"]);
 
     console.log("History Data = ", historyData)
     console.log("Selected Watches = ", selectedWatches)

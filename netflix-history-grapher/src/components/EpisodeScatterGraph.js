@@ -117,6 +117,37 @@ const data = {
     }]
 }
 
+function getDataPoints(historyData, title){
+    const names = title.split(": ")
+    var data = historyData["series"]
+    var datapoints = []
+    switch(names.length) {
+        case 0: // Show Series
+            for (var series in historyData.series[names[0]]) {// For each Season
+                for (var ep in historyData.series[names[0]][series]) {
+                    var time = historyData.series[names[0]][series][ep]
+                    datapoints.push({ x: time, name: ep })
+                }
+            }
+          break;
+        case 1: // Show Season 
+            for (var ep in historyData.series[names[0]][names[1]]) { // For each Episode
+                var time = historyData.series[names[0]][names[1]][ep]
+                datapoints.push({ x: time, name: ep })
+            }
+            
+          break;
+        case 2: // Show Episode
+            var time = historyData.series[names[0]][names[1]][names[2]]
+            datapoints.push({ x: time, name: names[2] })
+            break;
+        default:
+          console.log("Default Data Point Switch!")
+    }
+
+    return datapoints;
+}
+
 export default function EpisodeScatterGraph(props) {
     const historyData = props.historyData;
 
