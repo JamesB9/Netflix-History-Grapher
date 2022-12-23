@@ -24,9 +24,11 @@ export default function HistoryMenu(props) {
     const json = props.data;
     
     // Recursive function to create an accordion menu for a JSON object
-    const createAccordion = (json, layer) => {
+    const createAccordion = (json, layer, parent) => {
         //console.log(Object.entries(json))
         return Object.entries(json).sort((a, b) => sortFunction(a[0], b[0])).map(([key, value], index) => {
+            const fullName = parent == null ? key : parent + ": " + key
+
             if (typeof value === 'object') {
                 // If the value is an object, create an accordion panel with a submenu
                 return (
@@ -36,12 +38,12 @@ export default function HistoryMenu(props) {
                                     type="checkbox"
                                     id={layer+""+key}
                                     label={key}
-                                    onChange={(e) => e.target.checked ? props.addWatch(key) : props.removeWatch(key)}
+                                    onChange={(e) => e.target.checked ? props.addWatch(fullName) : props.removeWatch(fullName)}
                                 />
                         </Accordion.Header>
                         <Accordion.Body className="p-0">
-                            <Accordion >
-                                {createAccordion(value, layer+1)}
+                            <Accordion>
+                                {createAccordion(value, layer+1, fullName)}
                             </Accordion>
                         </Accordion.Body>
                     </Accordion.Item>
@@ -53,7 +55,7 @@ export default function HistoryMenu(props) {
                         type="switch"
                         id={layer+""+key}
                         label={key + " - " + value}
-                        //onChange={onChange}
+                        onChange={(e) => e.target.checked ? props.addWatch(fullName) : props.removeWatch(fullName)}
                         key={index}
                     />
                 )
@@ -62,7 +64,7 @@ export default function HistoryMenu(props) {
     };
 
     return (
-        <Accordion style={{ width: "500px" }}>
+        <Accordion style={{width:"90vw"}}>
             {createAccordion(json, 0)}
         </Accordion>
     );
