@@ -46,7 +46,7 @@ export default function parseHistoryFile(file, setHistoryData) {
                 }
 
                 var seasonName = names[seasonNameIndex].trim()
-                var seriesName = names.slice(0, seasonNameIndex).join(':').trim()
+                var seriesName = names.slice(0, seasonNameIndex).join('\uFE55').trim()
 
                 // Find Season
                 if (historyData.series.hasOwnProperty(seriesName)) {

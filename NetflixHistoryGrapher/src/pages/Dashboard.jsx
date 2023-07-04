@@ -1,51 +1,23 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState} from 'react';
 import HistoryMenu from "../components/HistoryMenu";
 import { HistoryContext } from '../App'
 import { useNavigate } from "react-router-dom";
 import WatchHistoryGraph from "../components/WatchHistoryGraph"
+import Form from 'react-bootstrap/Form'
+import {getDataPoints, convertFromRelative, convertToRelative} from '../utils/watchSelection';
 
 export default function Dashboard() {
     const historyContext = useContext(HistoryContext);
     const [watchSelection, setWatchSelection] = useState([]);
+    const [isGraphRelative, setGraphRelative] = useState(false);
 
-    console.log(historyContext.history)
-    console.log(watchSelection)
+    //console.log(historyContext.history)
+    //console.log(watchSelection)
 
-    function getKeyValuePairs(obj, parent) {
-        const result = [];
-        for (const key in obj) {
-          if (obj.hasOwnProperty(key)) {
-            const date = obj[key];
-            const name = parent + ":" + key;
-            if (typeof date === 'object') {
-                result.push(...getKeyValuePairs(date, name));
-            }else{
-                result.push({ name, date });
-            }
-          }
-        }
-        return result;
-    }
-
-
-    const getDataPoints = (fullTitle, titleList, historyData) => {
-
-        if(titleList.length == 1){
-            var datapoints = getKeyValuePairs(historyData[titleList[0]], fullTitle);
-            datapoints.sort((a, b) => {
-                var datea = a.date.split('-').join('');
-                var dateb = b.date.split('-').join(''); 
-                return (datea).localeCompare(dateb); 
-            });
-            for (var index = 0; index < datapoints.length; index++) {
-                datapoints[index].x = new Date(datapoints[index].date)
-                datapoints[index].y = index + 1;
-                delete datapoints[index].date;
-            }
-            return datapoints;
-        }else{
-            return getDataPoints(fullTitle, titleList.slice(1), historyData[titleList[0]])
-        }
+    if(isGraphRelative) {
+        convertToRelative(watchSelection);
+    }else{
+        convertFromRelative(watchSelection)
     }
 
     const addWatch = (value) => {
@@ -72,7 +44,21 @@ export default function Dashboard() {
     return (
         <>
             <h1>Dashboard</h1>
-            <WatchHistoryGraph datasets={watchSelection}/>
+            <Form>
+                <Form.Check 
+                    type="switch"
+                    id="relativeSwitch"
+                    label="Relative Graph"
+                    onChange={(e) => {
+                        if(e.target.checked){
+                            setGraphRelative(true)
+                        }else{
+                            setGraphRelative(false)
+                        }
+                    }}
+                />
+            </Form>
+            <WatchHistoryGraph datasets={watchSelection} relative={isGraphRelative}/>
             <HistoryMenu data={historyContext.history} addWatch={addWatch} removeWatch={removeWatch} />
         </>
     )

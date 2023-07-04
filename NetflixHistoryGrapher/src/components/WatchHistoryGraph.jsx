@@ -40,8 +40,8 @@ export default function WatchHistoryGraph(props) {
                     },
                     limits: {
                         //x: {min: 'original', max: 'original'},
-                        //y: {min: 0, max: 'original'}
                         y: {min: 0}
+                        //y: {min: 0}
                     },
                     zoom: {
                       wheel: {
@@ -78,20 +78,25 @@ export default function WatchHistoryGraph(props) {
             },
         };
 
+        if(props.relative){
+            options.scales.x.title.text = "# of Days Since First Watched"
+            options.scales.x.type = "linear";
+            delete options.scales.x.time;
+        }
+
         const ctx = chartContainer.current.getContext('2d');
         chartInstance = new Chart(ctx, {
             type: 'line',
             data: data,
             options: options,
         });
-        console.log("Create", chartInstance)
+
         return () => {
             if (chartInstance) {
-                console.log("Destroy", chartInstance)
                 chartInstance.destroy();
             }
         };
-    }, [props.datasets]);
+    }, [props.datasets, props.relative]);
 
     return (
         <div style={{width:"90vw"}}>
